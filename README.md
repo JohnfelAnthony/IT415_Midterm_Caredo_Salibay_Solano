@@ -6,7 +6,6 @@
 **Group Project Title:** Caredo-Salibay-Solano POS System<br>
 **Section:** BSIT 4D<br>
 **Instructor:** Reban Cliff Fajardo<br>
-**Evaluation date listed in the submitted checklist:** October 10, 2026<br>
 **Repository:** [JohnfelAnthony/IT415_Midterm_Caredo_Salibay_Solano](https://github.com/JohnfelAnthony/IT415_Midterm_Caredo_Salibay_Solano)<br>
 **Integration branch:** `main`
 
