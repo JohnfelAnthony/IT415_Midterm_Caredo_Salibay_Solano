@@ -13,15 +13,15 @@
        ========================================================= -->
   <header>
     <div class="brand">
-      <div class="brand-icon">🛒</div>
+      <div class="brand-icon" data-icon="gear" aria-hidden="true"></div>
       <div class="brand-text">
-        <h1>CAMPUS HUB POS</h1>
-        <p>Self-Service Touchscreen Kiosk</p>
+        <h1>CAMPUS HUB <span>POS</span></h1>
+        <p>The campus provisioner</p>
       </div>
     </div>
 
     <!-- Stepper indicator -->
-    <div class="stepper" id="stepper">
+    <div class="stepper" id="stepper" aria-label="Order progress">
       <div class="step-pill active" id="step-pill-1">
         <span class="step-circle">1</span> Order
       </div>
@@ -35,6 +35,7 @@
         <span class="step-circle">4</span> Receipt
       </div>
     </div>
+    <div class="header-note"><span class="status-dot"></span> Self-service kiosk</div>
   </header>
 
   <!-- =========================================================
@@ -48,18 +49,26 @@
         
         <!-- Left: Product Catalog -->
         <section class="catalog-section">
+          <div class="menu-intro">
+            <div class="menu-intro-copy">
+              <div class="eyebrow"><span class="little-rule"></span> THE CAMPUS MENU</div>
+              <h2>Good food.<br><em>Great company.</em></h2>
+              <p>A little fuel for your next big idea. Tap a favourite to begin.</p>
+            </div>
+            <div class="menu-seal" aria-hidden="true"><span data-icon="gear"></span><span class="seal-word">CAMPUS<br>FAVOURITES</span><span class="seal-caption">A BREAK WELL SPENT</span></div>
+          </div>
           <!-- Catalog Header Bar with Categories & History Button -->
           <div class="catalog-top-bar">
             <!-- Categories Filter -->
             <div class="category-bar">
-              <button class="cat-btn active" onclick="filterCategory('all', this)">✨ All Items</button>
-              <button class="cat-btn" onclick="filterCategory('drinks', this)">🥤 Beverages</button>
-              <button class="cat-btn" onclick="filterCategory('food', this)">🥪 Meals</button>
-              <button class="cat-btn" onclick="filterCategory('snacks', this)">🍪 Snacks</button>
+              <button class="cat-btn active" aria-pressed="true" onclick="filterCategory('all', this)"><span data-icon="grid"></span> All Items</button>
+              <button class="cat-btn" aria-pressed="false" onclick="filterCategory('drinks', this)"><span data-icon="cup"></span> Beverages</button>
+              <button class="cat-btn" aria-pressed="false" onclick="filterCategory('food', this)"><span data-icon="plate"></span> Meals</button>
+              <button class="cat-btn" aria-pressed="false" onclick="filterCategory('snacks', this)"><span data-icon="cookie"></span> Snacks</button>
             </div>
             <!-- Clearly Visible Transaction History Button -->
             <button class="btn-history-toggle" onclick="openTransactionHistory()" title="View Transaction History">
-              📜 Transaction History
+              <span data-icon="clock"></span> Transaction History
             </button>
           </div>
 
@@ -71,6 +80,7 @@
 
         <!-- Right: Touch Cart Sidebar -->
         <aside class="cart-sidebar">
+          <div class="cart-overline"><span data-icon="receipt"></span> YOUR ORDER TICKET</div>
           <div class="cart-header">
             <h2>Current Order</h2>
             <span class="item-count-badge" id="cart-item-count">0 items</span>
@@ -86,8 +96,9 @@
               <span class="cart-total-amount" id="cart-total-display">₱0.00</span>
             </div>
             <button class="btn btn-primary" id="btn-proceed-review" onclick="goToSummary()" disabled>
-              Review Order ➔
+              Review Order <span data-icon="arrow"></span>
             </button>
+            <p class="cart-footnote">Review your items before payment.</p>
           </div>
         </aside>
 
@@ -128,10 +139,10 @@
 
         <div class="button-stack">
           <button class="btn btn-primary" onclick="goToPaymentMethod()">
-            Continue to Payment ➔
+            Continue to Payment <span data-icon="arrow"></span>
           </button>
           <button class="btn btn-secondary" onclick="backToOrder()">
-            ← Back / Modify Order
+            <span data-icon="back"></span> Back / Modify Order
           </button>
         </div>
       </div>
@@ -152,29 +163,32 @@
 
         <div class="payment-options-grid">
           <!-- 1. Cash -->
-          <div class="payment-card-btn" onclick="selectPaymentMode('cash')">
-            <div class="pay-icon-box">💵</div>
-            <div class="pay-btn-title">Cash</div>
-            <div class="pay-btn-desc">Pay with cash bills. Change is computed automatically.</div>
-          </div>
+          <button class="payment-card-btn" onclick="selectPaymentMode('cash')">
+            <span class="pay-icon-box" data-icon="cash"></span>
+            <span class="pay-btn-title">Cash</span>
+            <span class="pay-btn-desc">Pay with cash bills. Change is computed automatically.</span>
+            <span class="payment-arrow" data-icon="arrow"></span>
+          </button>
 
           <!-- 2. QR Payment -->
-          <div class="payment-card-btn" onclick="selectPaymentMode('qr')">
-            <div class="pay-icon-box">📱</div>
-            <div class="pay-btn-title">QR Payment</div>
-            <div class="pay-btn-desc">Scan using GCash, Maya, or any supported banking app.</div>
-          </div>
+          <button class="payment-card-btn" onclick="selectPaymentMode('qr')">
+            <span class="pay-icon-box" data-icon="qr"></span>
+            <span class="pay-btn-title">QR Payment</span>
+            <span class="pay-btn-desc">Scan using GCash, Maya, or a supported banking app.</span>
+            <span class="payment-arrow" data-icon="arrow"></span>
+          </button>
 
           <!-- 3. Credit / Debit Card -->
-          <div class="payment-card-btn" onclick="selectPaymentMode('card')">
-            <div class="pay-icon-box">💳</div>
-            <div class="pay-btn-title">Card</div>
-            <div class="pay-btn-desc">Tap, insert, or swipe your physical bank card.</div>
-          </div>
+          <button class="payment-card-btn" onclick="selectPaymentMode('card')">
+            <span class="pay-icon-box" data-icon="card"></span>
+            <span class="pay-btn-title">Card</span>
+            <span class="pay-btn-desc">Tap, insert, or swipe your physical bank card.</span>
+            <span class="payment-arrow" data-icon="arrow"></span>
+          </button>
         </div>
 
         <button class="btn btn-secondary" onclick="showScreen('screen-summary')">
-          ← Back to Order Summary
+          <span data-icon="back"></span> Back to Order Summary
         </button>
       </div>
     </div>
@@ -188,7 +202,7 @@
         </div>
 
         <div class="alert-banner" id="cash-alert">
-          <span style="font-size: 20px;">⚠️</span>
+          <span data-icon="alert"></span>
           <span id="cash-alert-text">Insufficient payment.</span>
         </div>
 
@@ -222,10 +236,10 @@
 
             <div style="margin-top: 20px;" class="button-stack">
               <button class="btn btn-primary" onclick="processCashPayment()">
-                Pay Now ➔
+                Pay Now <span data-icon="arrow"></span>
               </button>
               <button class="btn btn-secondary" onclick="showScreen('screen-method')">
-                ← Change Payment Method
+                <span data-icon="back"></span> Change Payment Method
               </button>
             </div>
           </div>
@@ -243,7 +257,7 @@
             <button class="num-btn" onclick="pressNum('9')">9</button>
             <button class="num-btn fn" onclick="pressClear()">Clear</button>
             <button class="num-btn" onclick="pressNum('0')">0</button>
-            <button class="num-btn fn" onclick="pressBackspace()">⌫</button>
+            <button class="num-btn fn" aria-label="Backspace" onclick="pressBackspace()">⌫</button>
           </div>
         </div>
 
@@ -255,7 +269,7 @@
       <div class="panel-center" style="max-width: 650px;">
         <div class="section-title-wrap">
           <h2>Scan QR Code</h2>
-          <p>Scan with your GCash, Maya, or any InstaPay app to pay.</p>
+          <p>Try the QR payment simulation. No real payment is required.</p>
         </div>
 
         <div class="amount-badge-header">
@@ -269,31 +283,31 @@
             <svg class="qr-code-svg" viewBox="0 0 100 100">
               <rect width="100" height="100" fill="#ffffff" />
               <!-- Top Left Marker -->
-              <rect x="5" y="5" width="30" height="30" fill="#0f172a" rx="4" />
+              <rect x="5" y="5" width="30" height="30" fill="#3e251b" rx="4" />
               <rect x="11" y="11" width="18" height="18" fill="#ffffff" />
-              <rect x="15" y="15" width="10" height="10" fill="#047857" />
+              <rect x="15" y="15" width="10" height="10" fill="var(--teal)" />
               <!-- Top Right Marker -->
-              <rect x="65" y="5" width="30" height="30" fill="#0f172a" rx="4" />
+              <rect x="65" y="5" width="30" height="30" fill="#3e251b" rx="4" />
               <rect x="71" y="11" width="18" height="18" fill="#ffffff" />
-              <rect x="75" y="15" width="10" height="10" fill="#047857" />
+              <rect x="75" y="15" width="10" height="10" fill="var(--teal)" />
               <!-- Bottom Left Marker -->
-              <rect x="5" y="65" width="30" height="30" fill="#0f172a" rx="4" />
+              <rect x="5" y="65" width="30" height="30" fill="#3e251b" rx="4" />
               <rect x="11" y="71" width="18" height="18" fill="#ffffff" />
-              <rect x="15" y="75" width="10" height="10" fill="#047857" />
+              <rect x="15" y="75" width="10" height="10" fill="var(--teal)" />
               <!-- Mock QR Data Pattern -->
-              <rect x="42" y="8" width="6" height="6" fill="#0f172a" />
-              <rect x="50" y="16" width="6" height="6" fill="#0f172a" />
-              <rect x="42" y="24" width="6" height="6" fill="#0f172a" />
-              <rect x="8" y="42" width="6" height="6" fill="#0f172a" />
-              <rect x="18" y="48" width="6" height="6" fill="#0f172a" />
-              <rect x="42" y="42" width="16" height="16" fill="#047857" rx="3" />
-              <rect x="65" y="42" width="6" height="6" fill="#0f172a" />
-              <rect x="75" y="48" width="8" height="6" fill="#0f172a" />
-              <rect x="85" y="60" width="8" height="6" fill="#0f172a" />
-              <rect x="44" y="66" width="8" height="6" fill="#0f172a" />
-              <rect x="56" y="74" width="6" height="8" fill="#0f172a" />
-              <rect x="70" y="70" width="10" height="10" fill="#0f172a" />
-              <rect x="85" y="82" width="8" height="8" fill="#0f172a" />
+              <rect x="42" y="8" width="6" height="6" fill="#3e251b" />
+              <rect x="50" y="16" width="6" height="6" fill="#3e251b" />
+              <rect x="42" y="24" width="6" height="6" fill="#3e251b" />
+              <rect x="8" y="42" width="6" height="6" fill="#3e251b" />
+              <rect x="18" y="48" width="6" height="6" fill="#3e251b" />
+              <rect x="42" y="42" width="16" height="16" fill="var(--teal)" rx="3" />
+              <rect x="65" y="42" width="6" height="6" fill="#3e251b" />
+              <rect x="75" y="48" width="8" height="6" fill="#3e251b" />
+              <rect x="85" y="60" width="8" height="6" fill="#3e251b" />
+              <rect x="44" y="66" width="8" height="6" fill="#3e251b" />
+              <rect x="56" y="74" width="6" height="8" fill="#3e251b" />
+              <rect x="70" y="70" width="10" height="10" fill="#3e251b" />
+              <rect x="85" y="82" width="8" height="8" fill="#3e251b" />
             </svg>
             <div class="qr-ref-code" id="qr-dynamic-ref">REF: QR-TXN-2026-0001</div>
           </div>
@@ -309,10 +323,10 @@
 
         <div class="button-stack">
           <button class="btn btn-primary" onclick="processQRPayment()">
-            ✓ Confirm Payment
+            <span data-icon="check"></span> Confirm Payment
           </button>
           <button class="btn btn-secondary" onclick="showScreen('screen-method')">
-            ← Back
+            <span data-icon="back"></span> Back
           </button>
         </div>
       </div>
@@ -335,9 +349,9 @@
           <div class="terminal-illustration">
             <div class="terminal-screen" id="card-terminal-display">
               <div>READY</div>
-              <div style="font-size: 16px; font-weight: bold; color: #fff;">INSERT OR TAP</div>
+              <div style="font-size: 16px; font-weight: bold; color: #fffff0;">INSERT OR TAP</div>
             </div>
-            <div class="card-contactless-wave">📶</div>
+            <div class="card-contactless-wave" data-icon="wifi"></div>
             <div class="terminal-slot"></div>
           </div>
 
@@ -352,10 +366,10 @@
 
         <div class="button-stack">
           <button class="btn btn-primary" id="btn-process-card" onclick="processCardPayment()">
-            Process Payment ➔
+            Process Payment <span data-icon="arrow"></span>
           </button>
           <button class="btn btn-secondary" id="btn-back-card" onclick="showScreen('screen-method')">
-            ← Back
+            <span data-icon="back"></span> Back
           </button>
         </div>
       </div>
@@ -364,7 +378,7 @@
     <!-- SCREEN 5: PAYMENT SUCCESSFUL -->
     <div class="screen" id="screen-success">
       <div class="panel-center success-card" style="max-width: 600px;">
-        <div class="success-check-badge">✓</div>
+        <div class="success-check-badge" data-icon="check"></div>
         <div class="section-title-wrap" style="margin-bottom: 16px;">
           <h2>Payment Successful!</h2>
           <p>Transaction completed successfully. Thank you!</p>
@@ -375,7 +389,7 @@
         </div>
 
         <button class="btn btn-primary" onclick="showReceiptScreen()">
-          📄 View Receipt
+          <span data-icon="receipt"></span> View Receipt
         </button>
       </div>
     </div>
@@ -443,7 +457,7 @@
             </div>
             <div class="receipt-meta-row">
               <span>Status:</span>
-              <strong style="color: #047857;">Payment Successful</strong>
+              <strong style="color: var(--teal);">Payment Successful</strong>
             </div>
           </div>
 
@@ -458,10 +472,10 @@
         <!-- Action Buttons -->
         <div class="button-stack">
           <button class="btn btn-primary" onclick="startNewTransaction()">
-            ＋ New Transaction
+            <span data-icon="plus"></span> New Transaction
           </button>
           <button class="btn btn-secondary" onclick="window.print()">
-            🖨️ Print Receipt
+            <span data-icon="print"></span> Print Receipt
           </button>
         </div>
 
@@ -482,7 +496,7 @@
 
         <div style="margin-top: 24px;">
           <button class="btn btn-secondary" onclick="backToOrderFromHistory()">
-            ← Back to Order
+            <span data-icon="back"></span> Back to Order
           </button>
         </div>
       </div>
@@ -551,7 +565,7 @@
             </div>
             <div class="receipt-meta-row">
               <span>Status:</span>
-              <strong style="color: #047857;" id="hist-rcpt-status">Payment Successful</strong>
+              <strong style="color: var(--teal);" id="hist-rcpt-status">Payment Successful</strong>
             </div>
           </div>
 
@@ -566,10 +580,10 @@
         <!-- Action Buttons: Back to History (NOT New Transaction!) -->
         <div class="button-stack">
           <button class="btn btn-primary" onclick="backToHistory()">
-            ← Back to History
+            <span data-icon="back"></span> Back to History
           </button>
           <button class="btn btn-secondary" onclick="window.print()">
-            🖨️ Print Receipt
+            <span data-icon="print"></span> Print Receipt
           </button>
         </div>
 
@@ -577,16 +591,18 @@
     </div>
 
   </main>
+  <footer class="kiosk-footer"><span>CAMPUS HUB <span class="footer-divider">/</span> A little pause. A lovely provision.</span><span>Cash <i>·</i> QR Payment <i>·</i> Card</span></footer>
 
   <!-- =========================================================
        USER FEEDBACK TOAST NOTIFICATION
        ========================================================= -->
-  <div id="kiosk-toast">
-    <span id="toast-icon">ℹ️</span>
+  <div id="kiosk-toast" role="status" aria-live="polite" aria-atomic="true">
+    <span id="toast-icon" data-icon="check"></span>
     <span id="toast-text">Message</span>
   </div>
 
   <!-- Load External State Engine -->
+  <script src="ui.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
