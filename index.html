@@ -48,12 +48,19 @@
         
         <!-- Left: Product Catalog -->
         <section class="catalog-section">
-          <!-- Categories Filter -->
-          <div class="category-bar">
-            <button class="cat-btn active" onclick="filterCategory('all', this)">✨ All Items</button>
-            <button class="cat-btn" onclick="filterCategory('drinks', this)">🥤 Beverages</button>
-            <button class="cat-btn" onclick="filterCategory('food', this)">🥪 Meals</button>
-            <button class="cat-btn" onclick="filterCategory('snacks', this)">🍪 Snacks</button>
+          <!-- Catalog Header Bar with Categories & History Button -->
+          <div class="catalog-top-bar">
+            <!-- Categories Filter -->
+            <div class="category-bar">
+              <button class="cat-btn active" onclick="filterCategory('all', this)">✨ All Items</button>
+              <button class="cat-btn" onclick="filterCategory('drinks', this)">🥤 Beverages</button>
+              <button class="cat-btn" onclick="filterCategory('food', this)">🥪 Meals</button>
+              <button class="cat-btn" onclick="filterCategory('snacks', this)">🍪 Snacks</button>
+            </div>
+            <!-- Clearly Visible Transaction History Button -->
+            <button class="btn-history-toggle" onclick="openTransactionHistory()" title="View Transaction History">
+              📜 Transaction History
+            </button>
           </div>
 
           <!-- Product Cards Grid (min. 6 products required, we provide 8) -->
@@ -452,6 +459,114 @@
         <div class="button-stack">
           <button class="btn btn-primary" onclick="startNewTransaction()">
             ＋ New Transaction
+          </button>
+          <button class="btn btn-secondary" onclick="window.print()">
+            🖨️ Print Receipt
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SCREEN 7: TRANSACTION HISTORY -->
+    <div class="screen" id="screen-history">
+      <div class="panel-center" style="max-width: 820px;">
+        <div class="section-title-wrap">
+          <h2>Transaction History</h2>
+          <p>Review past completed transactions and inspect digital receipts.</p>
+        </div>
+
+        <div class="history-list" id="history-list-container">
+          <!-- Dynamically populated via JS -->
+        </div>
+
+        <div style="margin-top: 24px;">
+          <button class="btn btn-secondary" onclick="backToOrderFromHistory()">
+            ← Back to Order
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN 8: HISTORICAL RECEIPT (ARCHIVED) -->
+    <div class="screen" id="screen-history-receipt">
+      <div class="panel-center" style="max-width: 580px;">
+        
+        <!-- Printable / On-screen Digital Slip -->
+        <div class="receipt-slip-wrap" id="printable-history-receipt">
+          <div class="receipt-header">
+            <h3>CAMPUS HUB POS</h3>
+            <p>Self-Service Touchscreen Kiosk</p>
+            <p>Official Digital Receipt (Archive)</p>
+          </div>
+
+          <div class="receipt-divider"></div>
+
+          <div class="receipt-meta">
+            <div class="receipt-meta-row">
+              <span>Transaction Ref:</span>
+              <strong id="hist-rcpt-ref">TXN-0000</strong>
+            </div>
+            <div class="receipt-meta-row">
+              <span>Date & Time:</span>
+              <span id="hist-rcpt-date">--</span>
+            </div>
+          </div>
+
+          <div class="receipt-divider"></div>
+
+          <!-- Item list table -->
+          <table class="receipt-items-table">
+            <thead>
+              <tr>
+                <th>ITEM</th>
+                <th style="text-align: center;">QTY</th>
+                <th style="text-align: right;">PRICE</th>
+                <th style="text-align: right;">SUBTOTAL</th>
+              </tr>
+            </thead>
+            <tbody id="hist-rcpt-items-body">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+
+          <div class="receipt-divider"></div>
+
+          <div class="receipt-totals">
+            <div class="receipt-meta-row receipt-total-main">
+              <span>TOTAL DUE:</span>
+              <span id="hist-rcpt-total">₱0.00</span>
+            </div>
+            <div class="receipt-meta-row">
+              <span>Payment Method:</span>
+              <strong id="hist-rcpt-method">Cash</strong>
+            </div>
+            <div class="receipt-meta-row">
+              <span>Amount Paid:</span>
+              <span id="hist-rcpt-paid">₱0.00</span>
+            </div>
+            <div class="receipt-meta-row">
+              <span>Change:</span>
+              <span id="hist-rcpt-change">₱0.00</span>
+            </div>
+            <div class="receipt-meta-row">
+              <span>Status:</span>
+              <strong style="color: #047857;" id="hist-rcpt-status">Payment Successful</strong>
+            </div>
+          </div>
+
+          <div class="receipt-divider"></div>
+
+          <div class="receipt-footer-text">
+            Thank you for ordering at Campus Hub!<br>
+            Archived digital transaction record.
+          </div>
+        </div>
+
+        <!-- Action Buttons: Back to History (NOT New Transaction!) -->
+        <div class="button-stack">
+          <button class="btn btn-primary" onclick="backToHistory()">
+            ← Back to History
           </button>
           <button class="btn btn-secondary" onclick="window.print()">
             🖨️ Print Receipt
