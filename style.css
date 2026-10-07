@@ -1185,3 +1185,161 @@ table.data-table tr:last-child td {
   background: #991b1b;
   border: 1px solid #f87171;
 }
+
+/* =========================================================
+   12. TRANSACTION HISTORY STYLES
+   ========================================================= */
+.catalog-top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.btn-history-toggle {
+  background: #ffffff;
+  border: 2px solid var(--gray-border);
+  color: var(--dark);
+  padding: 10px 18px;
+  font-size: 15px;
+  font-weight: 700;
+  border-radius: 30px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn-history-toggle:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.btn-history-toggle:active {
+  transform: scale(0.97);
+  background: var(--primary-light);
+  border-color: var(--primary);
+}
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-height: 520px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.history-card {
+  background: #ffffff;
+  border: 2px solid var(--gray-border);
+  border-radius: var(--radius-md);
+  padding: 18px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.history-card:hover {
+  border-color: var(--primary-border);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.history-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: left;
+}
+
+.history-ref-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.history-ref {
+  font-family: monospace;
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--dark);
+}
+
+.history-method-badge {
+  background: var(--gray-bg);
+  border: 1px solid var(--gray-border);
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 12px;
+  text-transform: uppercase;
+}
+
+.history-date {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.history-total {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--primary);
+}
+
+.btn-view-receipt {
+  min-width: 140px;
+  height: 48px;
+  padding: 0 16px;
+  font-size: 15px;
+  font-weight: 700;
+  border-radius: 10px;
+  background: var(--primary);
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn-view-receipt:hover {
+  background: var(--primary-hover);
+}
+
+.btn-view-receipt:active {
+  transform: scale(0.96);
+}
+
+.history-empty {
+  text-align: center;
+  padding: 50px 20px;
+  color: var(--text-muted);
+}
+
+.history-empty .empty-icon {
+  font-size: 54px;
+  margin-bottom: 12px;
+  opacity: 0.6;
+}
+
+.history-empty h3 {
+  font-size: 20px;
+  color: var(--dark);
+  margin-bottom: 6px;
+}
+
+.history-empty p {
+  font-size: 15px;
+  color: var(--text-muted);
+}

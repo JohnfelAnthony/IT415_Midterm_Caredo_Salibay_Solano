@@ -21,6 +21,7 @@ let cart = [];               // Cart items: [{ id, name, price, quantity }]
 let activeCategory = "all";  // Selected category filter
 let rawCashInput = "";       // Cash entered in cents/numbers on touchscreen numpad
 let completedTransaction = null; // Stores completed transaction for success & receipt
+let memoryTransactions = [];   // In-memory fallback if storage is restricted or unavailable
 let isProcessingCard = false;
 let toastTimeout = null;
 
@@ -55,7 +56,7 @@ function updateStepper(screenId) {
 
   [p1, p2, p3, p4].forEach(p => p.className = "step-pill");
 
-  if (screenId === "screen-order") {
+  if (screenId === "screen-order" || screenId === "screen-history" || screenId === "screen-history-receipt") {
     p1.classList.add("active");
   } else if (screenId === "screen-summary") {
     p1.classList.add("completed");
@@ -446,19 +447,33 @@ function processCardPayment() {
 // ---------------------------------------------------------
 function getStoredTransactions() {
   try {
-    return JSON.parse(localStorage.getItem("campus_hub_pos_txns")) || [];
+    const raw = localStorage.getItem("campus_hub_pos_txns");
+    if (!raw) return memoryTransactions;
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return memoryTransactions;
+    // Filter and sanitize: must be non-null object with reference string
+    const valid = parsed.filter(t => t && typeof t === "object" && typeof t.reference === "string");
+    if (valid.length > 0) {
+      memoryTransactions = valid;
+    }
+    return valid;
   } catch (e) {
-    return [];
+    console.warn("Storage restricted or JSON malformed; falling back to memory:", e);
+    return memoryTransactions;
   }
 }
 
 function saveTransactionRecord(record) {
   try {
-    const history = getStoredTransactions();
+    const history = getStoredTransactions().slice();
     history.push(record);
+    memoryTransactions = history;
     localStorage.setItem("campus_hub_pos_txns", JSON.stringify(history));
   } catch (e) {
-    console.warn("Storage restricted; keeping in memory.");
+    console.warn("Storage restricted; keeping in memory:", e);
+    if (!memoryTransactions.includes(record)) {
+      memoryTransactions.push(record);
+    }
   }
 }
 
