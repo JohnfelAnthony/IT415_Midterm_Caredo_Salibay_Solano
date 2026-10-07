@@ -3,6 +3,12 @@
 **Course:** IT415 – Application Development and Emerging Technologies  
 **Project:** Touchscreen Point of Sale (POS) Kiosk System  
 **System Name:** Campus Hub POS  
+**Group Project Title:** Caredo-Salibay-Solano POS System<br>
+**Section:** BSIT 4D<br>
+**Instructor:** Reban Cliff Fajardo<br>
+**Evaluation date listed in the submitted checklist:** October 10, 2026<br>
+**Repository:** [JohnfelAnthony/IT415_Midterm_Caredo_Salibay_Solano](https://github.com/JohnfelAnthony/IT415_Midterm_Caredo_Salibay_Solano)<br>
+**Integration branch:** `main`
 
 ---
 
@@ -19,8 +25,10 @@ The customer flow follows the 7 required transaction stages:
    - **QR Payment:** Simulated QR e-wallet scanning with dynamic reference code and confirmation control.
    - **Credit/Debit Card:** Simulated contactless/EMV chip terminal with realistic processing progress state.
 5. **Payment Successful:** Instant confirmation with transaction reference number, payment method, amount paid, and change returned.
-6. **Digital Receipt:** Itemized digital thermal receipt slip with full audit trail, timestamp, and printing support.
+6. **Digital Receipt:** Itemized digital receipt with transaction details, timestamp, and browser printing support.
 7. **New Transaction (Reset):** One-tap kiosk reset that clears all cart data, input buffers, and previous customer details for the next transaction.
+
+QR and card payments are simulations. The application does not connect to a bank, e-wallet, payment gateway, or physical card reader. Saved transaction history remains available after resetting the current order.
 
 ---
 
@@ -31,18 +39,33 @@ The system is built using standard, zero-dependency web technologies, making it 
 ### How to Run:
 1. **Clone the repository:**
    ```bash
-   git clone <repository-url>
-   cd IT415_POS
+   git clone https://github.com/JohnfelAnthony/IT415_Midterm_Caredo_Salibay_Solano.git
+   cd IT415_Midterm_Caredo_Salibay_Solano
    ```
 2. **Open the application:**
    - Simply double-click `index.html` to open it in your default browser (Google Chrome, Microsoft Edge, Mozilla Firefox, or Safari).
-   - Alternatively, right-click `index.html` $\rightarrow$ **Open with** $\rightarrow$ **Google Chrome** (or Edge).
-   - Or serve with any local HTTP server (optional):
+   - Alternatively, right-click `index.html` → **Open with** → **Google Chrome** (or Edge).
+   - For consistent browser storage behavior, serve the repository with a local HTTP server:
      ```bash
      # Using Python (if available):
      python -m http.server 8000
      # Then visit http://localhost:8000 in your browser.
      ```
+
+On Windows, `py -m http.server 8000` is an alternative when Python is available through the Python launcher. Keep the terminal running while using the kiosk; press `Ctrl+C` to stop the server. No package installation, build command, environment variables, or database setup are required.
+
+### Project Files
+
+```text
+IT415_Midterm_Caredo_Salibay_Solano/
+├── index.html       # Menu, checkout, receipt, and history screens
+├── style.css        # Theme, responsive layout, and print styles
+├── ui.js            # SVG icons and product illustrations
+├── script.js        # Cart, payments, receipts, storage, and navigation
+├── design.md        # Reference design direction
+├── assets/fonts/    # Local font files and OFL licenses
+└── README.md        # Setup, team contributions, and development evidence
+```
 
 ---
 
@@ -53,8 +76,10 @@ The system is built using standard, zero-dependency web technologies, making it 
 - **Client-Side Logic:** Vanilla JavaScript (ES6+), Event-driven architecture, modular state management.
 - **Storage Strategy:** 
   - **Runtime State:** In-memory reactive state variables (`cart`, `rawCashInput`, `completedTransaction`).
-  - **Persistent Storage:** Browser `localStorage` (`campus_hub_pos_txns` key) to track sequential transaction reference numbering (`TXN-2026-00001`, `TXN-2026-00002`). If storage access is restricted, an automatic in-memory fallback ensures seamless operation.
+  - **Persistent Storage:** Browser `localStorage` (`campus_hub_pos_txns` key) saves completed transaction snapshots and supports sequential reference numbering in normal operation. An in-memory fallback is available when storage access fails; its known read/write failure limitation is documented below.
   - **Rationale:** A full external SQL/NoSQL database is not necessary for an isolated self-service kiosk terminal. Local client-side persistence provides instant zero-latency responses, works completely offline, and eliminates server configuration overhead during practical examination.
+
+History belongs to the browser and website origin where the order was completed. Different devices, browser profiles, localhost addresses, and deployed domains have separate histories. Clearing site data removes the saved history; the in-memory fallback does not survive a reload. The system has no central database or cross-device synchronization.
 
 ---
 
@@ -73,6 +98,8 @@ While taking structural inspiration from the instructor's sample UI, the **Campu
 
 ## 📋 5. Acceptance Checklist & Test Matrix
 
+These are development test results from the October 7, 2026 browser and logic review, not an instructor grade. The supplied Solano checklist marks the normal application flow as passing. The broader review also found the storage/reference edge cases documented below. This README update changes documentation only.
+
 | # | Test Item | Action | Expected Output | Status |
 |---|---|---|---|---|
 | 1 | Startup & Touch Selection | Open application | $\ge 6$ products with visible names and prices (8 included). Large touch cards. | ✅ Pass |
@@ -89,10 +116,87 @@ While taking structural inspiration from the instructor's sample UI, the **Campu
 | 12 | QR Payment Simulation | Start new order, select QR Payment | Shows amount, QR graphic, instructions, and Confirm button. Receipt records "QR Payment" with ₱0.00 change. | ✅ Pass |
 | 13 | Card Payment Simulation | Start new order, select Card | Shows tap/swipe instructions and simulated 1.5s "Processing payment..." progress bar. Receipt records "Credit/Debit Card". | ✅ Pass |
 | 14 | New Transaction Reset | Tap "＋ New Transaction" on receipt | Entire cart, inputs, and previous receipt wiped; returns to clean empty Screen 1. | ✅ Pass |
-| 15 | Unique Transaction IDs | Complete multiple transactions | Each transaction generates a unique sequential reference (`TXN-2026-00001`, `TXN-2026-00002`). | ✅ Pass |
+| 15 | Unique Transaction IDs | Complete multiple transactions | Normal sequential transactions produce different references. Storage failures or gaps in retained references can cause reuse. | Normal flow passes; edge cases unresolved |
+
+### Known Limitations
+
+1. **Storage write failure:** If existing history can be read but a new write fails, reopening history can replace the in-memory fallback with older saved data. The latest unsaved record can disappear from the list.
+2. **Reference reuse:** References use stored record count plus one. Retained references ending `00001` and `00003` cause the next count-based reference to end `00003` again. The storage failure above can also allow reuse.
+
+The normal exam checkout flow passes the recorded tests. These issues remain relevant to history reliability and the required unique-reference behavior. Browser printing is available, but physical printer output was not tested.
 
 ---
 
+## 6. Group Members and Contributions
 
+The member names, account URLs, and branch assignments below are recorded in the supplied `SOLANO_IT415-Acceptance-Checklist.pdf`. The team confirmed that Karen and Prille used the same laptop and worked together on one branch.
 
+| ID | Member | GitHub Account | Feature Branch | Contribution |
+|---|---|---|---|---|
+| M1 | Johnfel Anthony Caredo | [JohnfelAnthony](https://github.com/JohnfelAnthony) | `feature/ui-redesign` | UI redesign, SVG icons/artwork, local fonts, responsive layouts, history navigation handlers, and integration of both feature branches |
+| M2 | Karen B. Solano | [Dinosow](https://github.com/Dinosow) | `feature/transaction-history`, shared with M3 | Joint work with Prille on the initial application, HTML/CSS/JS separation, initial README, history layout, and storage fallback |
+| M3 | Prille Vincent Salibay | [Prille](https://github.com/Prille) | `feature/transaction-history`, shared with M2 | Joint work with Karen on the initial application, HTML/CSS/JS separation, initial README, history layout, and storage fallback |
 
+### Shared Laptop and Branch
+
+Karen and Prille used the same laptop and the same `feature/transaction-history` branch. Their joint work is associated with four commits recorded under the Git author/account **Dinosow**: `9be9774`, `1d222fd`, `9dc4925`, and `30cf9d9`. Both members receive credit for the shared work in the contribution register; these remain **four distinct commits in total**, not four additional commits for each person.
+
+Git records the account that saved the commits; it does not separately measure each member's participation on the shared laptop. Each member can explain their role through the code demonstration and contribution register. The Prille account is the member profile supplied in the checklist; the current Git history does not separately attribute these shared commits to that account.
+
+### Pull Requests and Integration
+
+| Pull Request | Branch and Target | Feature Work | PR Author and Merger | Status |
+|---|---|---|---|---|
+| [PR #1](https://github.com/JohnfelAnthony/IT415_Midterm_Caredo_Salibay_Solano/pull/1) | `feature/transaction-history` → `main` | Karen and Prille's shared transaction-history work, recorded under Dinosow | JohnfelAnthony | Merged as `cb688c0` |
+| [PR #2](https://github.com/JohnfelAnthony/IT415_Midterm_Caredo_Salibay_Solano/pull/2) | `feature/ui-redesign` → `main` | Johnfel's redesign and history-handler implementation | JohnfelAnthony | Merged as `eb07efd` |
+
+Both PRs were opened and merged by JohnfelAnthony. GitHub records inspected on October 7, 2026 contained no formal reviews, review comments, or issue comments for either PR. Merge evidence exists; a separate review before merge is not documented. Deleted feature branches can still be verified through their merged PRs and commits.
+
+### Recorded Development History
+
+The application review used integration commit `eb07efd166c7fd9f911e3d7f4344a65ece459b55`. The following history predates this README completion:
+
+| Commit | Recorded Git Author | Change |
+|---|---|---|
+| `9be9774` | Dinosow | Initial touchscreen POS application |
+| `1d222fd` | Dinosow | Separate HTML, CSS, and JavaScript files |
+| `9dc4925` | Dinosow | Add the initial README |
+| `30cf9d9` | Dinosow | Add transaction-history layout and storage fallback |
+| `cb688c0` | Johnfel Anthony Caredo | Merge PR #1 into `main` |
+| `486ceff` | Anthony | Apply the redesign, implement history handlers, and improve current-transaction reset |
+| `eb07efd` | Johnfel Anthony Caredo | Merge PR #2 into `main` |
+
+The register associates `486ceff` with Johnfel's redesign. Its Git author name is `Anthony`; GitHub does not link that commit to an account. The integration commits use Johnfel's full name.
+
+This snapshot contains five development commits and two merge commits. Seven commit entries alone do not establish the seven distinct development stages requested by the process checklist. Further commits should record actual work rather than artificial changes made only to reach a count.
+
+---
+
+## 7. AI Assistance Record
+
+Codex assisted with the following stages recorded in the project conversation. These entries summarize actual requests, responses, evaluation, and changes; they do not reconstruct missing prompts from the shared laptop.
+
+| Stage | Prompt or Request | AI Response | Evaluation and Resulting Changes |
+|---|---|---|---|
+| Requirements review | Check the codebase against the IT415 practical exam and acceptance checklist | Compared the order, payment, receipt, and reset flow with the PDFs | Checked calculations and navigation; identified missing documentation and process evidence |
+| Feature planning | Provide a prompt for `feature/transaction-history` | Prepared feature and branch guidance | Karen and Prille's shared feature branch was later merged through PR #1; the full shared-laptop AI transcript is not available here |
+| UI generation and adaptation | Read `design.md`, inspect the supplied screenshot, and redesign the system | Implemented parchment/brass styling, SVG icons and products, bundled fonts, and consistent checkout screens | Adapted the landing-page reference to kiosk ordering; checked desktop and narrow-screen layouts and corrected overflow |
+| Debugging and refactoring during redesign | Keep the redesigned checkout and transaction history working | Found missing history handlers; added history listing and archived-receipt functions; cleared current receipt details during reset; consolidated styling | Checked archived receipts without changing the active cart, malformed storage handling, escaped text, and reset; included in `486ceff` |
+| Subsequent system audit | Recheck transaction history and completeness against the PDFs | Reproduced storage write-failure and reference-collision cases; checked Git and documentation evidence | Distinguished normal-flow passes from unresolved edge cases and recorded the limitations above |
+| README completion | Read Solano's checklist and explain that two members share one branch and laptop | Added the supplied roster, joint-work attribution, corrected setup commands, PR/commit evidence, and this record | Counted shared commits once, separated Git authorship from team attribution, and preserved the known limitations |
+
+AI-generated changes were evaluated through browser interaction, JavaScript syntax checks, and isolated logic checks covering cart calculations, payment validation, history isolation, malformed storage, and reference generation. No permanent automated test suite is included in the repository. Application tests were not rerun for this documentation-only update.
+
+The original generation prompts and responses for Karen and Prille's initial application and shared-laptop work have not been supplied in this conversation. Their member-specific AI evidence can accompany the submission separately. This section records the available assistance and its evaluation; it does not claim to be a complete transcript for every member.
+
+---
+
+## 8. Submission Evidence
+
+- [Shared repository](https://github.com/JohnfelAnthony/IT415_Midterm_Caredo_Salibay_Solano)
+- [Commit history on main](https://github.com/JohnfelAnthony/IT415_Midterm_Caredo_Salibay_Solano/commits/main)
+- [Repository network](https://github.com/JohnfelAnthony/IT415_Midterm_Caredo_Salibay_Solano/network)
+- [Merged history PR #1](https://github.com/JohnfelAnthony/IT415_Midterm_Caredo_Salibay_Solano/pull/1)
+- [Merged redesign PR #2](https://github.com/JohnfelAnthony/IT415_Midterm_Caredo_Salibay_Solano/pull/2)
+
+Team and course details were transcribed from `SOLANO_IT415-Acceptance-Checklist.pdf`, with the shared-laptop arrangement confirmed by the team. Its listed evaluation date does not establish that an instructor evaluation has already occurred. Instructor access confirmation, live member explanations, and final grading remain part of the instructor's verification.
