@@ -61,13 +61,13 @@ The system is built using standard, zero-dependency web technologies, making it 
 ## 🎨 4. Unique UI/UX Design Direction
 
 While taking structural inspiration from the instructor's sample UI, the **Campus Hub POS** features a distinct, custom-crafted visual identity:
-1. **Fresh Color Palette:** Built upon rich **Emerald Green** (`#047857`), warm **Amber Gold** (`#f59e0b`), and clean **Slate** (`#0f172a`), moving away from standard generic presets.
-2. **Step Breadcrumb Stepper:** An interactive 4-stage pill indicator at the header showing live kiosk progress (`1 Order` $\rightarrow$ `2 Review` $\rightarrow$ `3 Payment` $\rightarrow$ `4 Receipt`).
-3. **Category Tabs:** Filter between All Items, Beverages 🥤, Meals 🥪, and Snacks 🍪.
-4. **Touchscreen Numeric Keypad:** Dedicated on-screen numpad for cash payment with `Clear`, `00`, and `⌫` controls, eliminating the need for a physical keyboard on touch kiosks.
-5. **Live Financial Difference Feedback:** Dynamic preview box displaying live change due (in green) or remaining shortage (in red) as each bill/digit is entered.
-6. **Contactless Card Terminal Graphic:** Dynamic contactless wave indicator and smooth progress bar simulating payment authorization.
-7. **Perforated Thermal Receipt Slip:** High-contrast receipt display with formatted borders, printable via the browser's native print engine (`window.print()`).
+1. **Victorian brass and parchment:** The visual direction in `design.md` is adapted to the kiosk with parchment (`#F5DEB3`), mahogany (`#5C0000`), brass (`#B5A642`), copper, and teal details. Order tickets and checkout panels use engraved borders and subtle paper texture.
+2. **Local typography and artwork:** IM Fell English provides the antique serif text; JetBrains Mono displays prices and transaction metadata. Font files and their OFL licenses are bundled in `assets/fonts/`. Product illustrations and interface icons are inline SVGs in `ui.js`, so the interface has no external font or image dependencies.
+3. **Order progress:** Four numbered indicators show the current Order, Review, Payment, or Receipt stage.
+4. **Touch and keyboard controls:** Product and payment cards are native buttons. Cart controls have descriptive accessible labels and 44px touch targets; focus rings and reduced-motion support are included. The menu collapses to two columns on small screens.
+5. **Cash keypad and feedback:** The on-screen number pad includes Clear and Backspace. The application previews change or shortage and rejects insufficient payment with a visible alert and live status message.
+6. **Payment and receipts:** A brass-framed card terminal displays the simulated processing state. Current and archived receipts share the same readable paper style. Print styles include only the active receipt.
+7. **Transaction history:** Completed transactions are listed newest first and remain after refresh. Historical receipts use a separate screen and preserve any unfinished order. Missing or malformed storage and invalid records are handled without crashing.
 
 ---
 

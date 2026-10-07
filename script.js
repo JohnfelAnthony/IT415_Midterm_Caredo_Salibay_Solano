@@ -4,14 +4,14 @@
 const STORE_NAME = "CAMPUS HUB POS";
 
 const PRODUCTS = [
-  { id: 1, name: "Espresso Roast Coffee", category: "drinks", price: 45.00, icon: "☕" },
-  { id: 2, name: "Club Sandwich",         category: "food",   price: 50.00, icon: "🥪" },
-  { id: 3, name: "Ice Cold Soft Drink",   category: "drinks", price: 35.00, icon: "🥤" },
-  { id: 4, name: "Choco Chip Cookies",    category: "snacks", price: 25.00, icon: "🍪" },
-  { id: 5, name: "Pure Mineral Water",    category: "drinks", price: 20.00, icon: "💧" },
-  { id: 6, name: "Milk Chocolate Bar",    category: "snacks", price: 25.00, icon: "🍫" },
-  { id: 7, name: "Chicken Rice Bowl",     category: "food",   price: 75.00, icon: "🍗" },
-  { id: 8, name: "Crispy Potato Fries",   category: "snacks", price: 40.00, icon: "🍟" }
+  { id: 1, name: "Espresso Roast Coffee", category: "drinks", price: 45.00 },
+  { id: 2, name: "Club Sandwich",         category: "food",   price: 50.00 },
+  { id: 3, name: "Ice Cold Soft Drink",   category: "drinks", price: 35.00 },
+  { id: 4, name: "Choco Chip Cookies",    category: "snacks", price: 25.00 },
+  { id: 5, name: "Pure Mineral Water",    category: "drinks", price: 20.00 },
+  { id: 6, name: "Milk Chocolate Bar",    category: "snacks", price: 25.00 },
+  { id: 7, name: "Chicken Rice Bowl",     category: "food",   price: 75.00 },
+  { id: 8, name: "Crispy Potato Fries",   category: "snacks", price: 40.00 }
 ];
 
 // ---------------------------------------------------------
@@ -80,7 +80,7 @@ function showToast(message, type = "ok") {
   const text = document.getElementById("toast-text");
 
   text.textContent = message;
-  icon.textContent = type === "ok" ? "✓" : "⚠️";
+  icon.innerHTML = kioskIcon(type === "ok" ? "check" : "alert");
 
   toast.className = "show " + (type === "ok" ? "toast-ok" : "toast-error");
 
@@ -95,8 +95,14 @@ function showToast(message, type = "ok") {
 // ---------------------------------------------------------
 function filterCategory(category, buttonEl) {
   activeCategory = category;
-  document.querySelectorAll(".cat-btn").forEach(btn => btn.classList.remove("active"));
-  if (buttonEl) buttonEl.classList.add("active");
+  document.querySelectorAll(".cat-btn").forEach(btn => {
+    btn.classList.remove("active");
+    btn.setAttribute("aria-pressed", "false");
+  });
+  if (buttonEl) {
+    buttonEl.classList.add("active");
+    buttonEl.setAttribute("aria-pressed", "true");
+  }
   renderProducts();
 }
 
@@ -112,15 +118,15 @@ function renderProducts() {
     const badgeClass = qtyCount > 0 ? "card-badge visible" : "card-badge";
 
     return `
-      <div class="product-card" onclick="addToCart(${product.id})">
+      <button class="product-card${qtyCount > 0 ? ' selected' : ''}" aria-label="Add ${product.name}, ${formatCurrency(product.price)}" onclick="addToCart(${product.id})">
         <div class="${badgeClass}" id="badge-${product.id}">${qtyCount}</div>
-        <div class="product-icon">${product.icon}</div>
+        <span class="product-icon">${productArtwork(product.id)}</span>
         <div class="product-info">
+          <span class="category-tag">${{drinks: 'Beverages', food: 'Meals', snacks: 'Snacks'}[product.category]}</span>
           <h3>${product.name}</h3>
-          <span class="category-tag">${product.category}</span>
         </div>
-        <div class="product-price">${formatCurrency(product.price)}</div>
-      </div>
+        <span class="product-bottom"><span class="product-price">${formatCurrency(product.price)}</span><span class="product-add">${kioskIcon('plus')}</span></span>
+      </button>
     `;
   }).join("");
 }
@@ -196,9 +202,9 @@ function updateCartUI() {
   if (cart.length === 0) {
     listContainer.innerHTML = `
       <div class="cart-empty-message">
-        <div class="empty-icon">🛍️</div>
+        <div class="empty-icon">${kioskIcon('bag')}</div>
         <p><strong>Your order is empty</strong></p>
-        <p style="font-size: 14px; margin-top: 4px;">Tap any product on the left to add it.</p>
+        <p style="font-size: 15px; margin-top: 9px;">Something delicious awaits. Tap a menu item to get started.</p>
       </div>
     `;
     proceedBtn.disabled = true;
@@ -216,11 +222,11 @@ function updateCartUI() {
           </div>
           <div class="cart-row-actions">
             <div class="qty-controls">
-              <button class="qty-btn" onclick="changeQuantity(${item.id}, -1)">−</button>
+              <button class="qty-btn" aria-label="Decrease ${item.name} quantity" onclick="changeQuantity(${item.id}, -1)">−</button>
               <span class="qty-display">${item.quantity}</span>
-              <button class="qty-btn" onclick="changeQuantity(${item.id}, 1)">+</button>
+              <button class="qty-btn" aria-label="Increase ${item.name} quantity" onclick="changeQuantity(${item.id}, 1)">+</button>
             </div>
-            <button class="btn-delete-item" title="Remove item" onclick="removeFromCart(${item.id})">🗑️</button>
+            <button class="btn-delete-item" title="Remove item" aria-label="Remove ${item.name}" onclick="removeFromCart(${item.id})">${kioskIcon('trash')}</button>
           </div>
         </div>
       `;
@@ -405,13 +411,13 @@ function resetCardState() {
   isProcessingCard = false;
   document.getElementById("card-terminal-display").innerHTML = `
     <div>READY</div>
-    <div style="font-size: 16px; font-weight: bold; color: #fff;">INSERT OR TAP</div>
+    <div style="font-size: 16px; font-weight: bold; color: #fffff0;">INSERT OR TAP</div>
   `;
   document.getElementById("card-instruction-text").textContent = "Please tap, insert, or swipe your card on the reader.";
   document.getElementById("btn-process-card").disabled = false;
   document.getElementById("btn-back-card").disabled = false;
   document.getElementById("card-progress-bar").classList.remove("active");
-  document.getElementById("card-progress-fill").style.width = "0%";
+  document.getElementById("card-progress-fill").style.transform = "scaleX(0)";
 }
 
 function processCardPayment() {
@@ -424,15 +430,15 @@ function processCardPayment() {
 
   // Processing visual state
   document.getElementById("card-terminal-display").innerHTML = `
-    <div style="color: #f59e0b;">PROCESSING</div>
-    <div style="font-size: 13px; color: #fff;">COMMUNICATING...</div>
+    <div style="color: #d8bc73;">PROCESSING</div>
+    <div style="font-size: 13px; color: #fffff0;">COMMUNICATING...</div>
   `;
   document.getElementById("card-instruction-text").textContent = "Processing payment... Please do not remove card.";
 
   const bar = document.getElementById("card-progress-bar");
   const fill = document.getElementById("card-progress-fill");
   bar.classList.add("active");
-  setTimeout(() => { fill.style.width = "100%"; }, 50);
+  setTimeout(() => { fill.style.transform = "scaleX(1)"; }, 50);
 
   // Simulate 1.5s transaction handshake
   setTimeout(() => {
@@ -544,7 +550,7 @@ function renderSuccessScreen() {
     </div>
     <div class="info-line">
       <span>Change Returned:</span>
-      <strong style="color: #047857;">${formatCurrency(t.change)}</strong>
+      <strong style="color: var(--teal);">${formatCurrency(t.change)}</strong>
     </div>
   `;
 }
@@ -585,6 +591,16 @@ function startNewTransaction() {
   completedTransaction = null;
   isProcessingCard = false;
 
+  // Clear the current customer displays; saved history remains available.
+  document.getElementById("rcpt-items-body").innerHTML = "";
+  document.getElementById("success-summary-box").innerHTML = "";
+  document.getElementById("summary-tbody").innerHTML = "";
+  ["rcpt-ref", "rcpt-date"].forEach(id => document.getElementById(id).textContent = "--");
+  document.getElementById("rcpt-method").textContent = "--";
+  ["rcpt-total", "rcpt-paid", "rcpt-change", "method-due-amount", "cash-screen-due", "qr-screen-due", "card-screen-due", "summary-total-val"].forEach(id => {
+    document.getElementById(id).textContent = formatCurrency(0);
+  });
+
   // 2. Clear UI Inputs & Alerts
   hideCashAlert();
   pressClear();
@@ -597,6 +613,7 @@ function startNewTransaction() {
   // 4. Reset Category Buttons
   document.querySelectorAll(".cat-btn").forEach((btn, idx) => {
     btn.classList.toggle("active", idx === 0);
+    btn.setAttribute("aria-pressed", String(idx === 0));
   });
 
   // 5. Navigate to Screen 1
@@ -605,7 +622,72 @@ function startNewTransaction() {
 }
 
 // ---------------------------------------------------------
-// 11. INITIALIZATION ON PAGE LOAD
+// 11. HISTORY NAVIGATION — archives never mutate the active customer order.
+// ---------------------------------------------------------
+let historyViewRecords = [];
+
+function escapeHTML(value) {
+  return String(value ?? '').replace(/[&<>"']/g, character => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[character]));
+}
+
+function isDisplayableTransaction(record) {
+  return record && typeof record.reference === 'string' &&
+    typeof record.date === 'string' && typeof record.paymentMethod === 'string' &&
+    [record.total, record.amountPaid, record.change].every(value => Number.isFinite(value) && value >= 0) &&
+    Array.isArray(record.items) && record.items.length > 0 &&
+    record.items.every(item => item && typeof item.name === 'string' &&
+      Number.isInteger(item.quantity) && item.quantity > 0 &&
+      Number.isFinite(item.price) && item.price >= 0 &&
+      Number.isFinite(item.subtotal) && item.subtotal >= 0);
+}
+
+function openTransactionHistory() {
+  // Transactions are appended on completion; reverse a copy for newest first.
+  historyViewRecords = getStoredTransactions().filter(isDisplayableTransaction).slice().reverse();
+  const container = document.getElementById('history-list-container');
+  if (!historyViewRecords.length) {
+    container.innerHTML = `<div class="history-empty"><div class="empty-icon">${kioskIcon('clock')}</div><h3>No transactions yet</h3><p>Completed orders will appear here.<br>Return to the menu to start your first order.</p></div>`;
+  } else {
+    container.innerHTML = historyViewRecords.map((record, index) => `
+      <article class="history-card">
+        <div class="history-info">
+          <div class="history-ref-row"><span class="history-ref">${escapeHTML(record.reference)}</span><span class="history-method-badge">${escapeHTML(record.paymentMethod)}</span></div>
+          <div class="history-date">${escapeHTML(record.date)}</div>
+          <div class="history-total">${formatCurrency(record.total)}</div>
+        </div>
+        <button class="btn-view-receipt" aria-label="View receipt ${escapeHTML(record.reference)}" onclick="viewHistoricalReceipt(${index})">${kioskIcon('receipt')} View Receipt</button>
+      </article>`).join('');
+  }
+  showScreen('screen-history');
+}
+
+function viewHistoricalReceipt(index) {
+  const record = historyViewRecords[index];
+  if (!record) return;
+  document.getElementById('hist-rcpt-ref').textContent = record.reference;
+  document.getElementById('hist-rcpt-date').textContent = record.date;
+  document.getElementById('hist-rcpt-items-body').innerHTML = record.items.map(item => `
+    <tr><td><strong>${escapeHTML(item.name)}</strong></td><td class="c-align">${item.quantity}</td><td class="r-align">${formatCurrency(item.price)}</td><td class="r-align">${formatCurrency(item.subtotal)}</td></tr>`).join('');
+  document.getElementById('hist-rcpt-total').textContent = formatCurrency(record.total);
+  document.getElementById('hist-rcpt-method').textContent = record.paymentMethod;
+  document.getElementById('hist-rcpt-paid').textContent = formatCurrency(record.amountPaid);
+  document.getElementById('hist-rcpt-change').textContent = formatCurrency(record.change);
+  document.getElementById('hist-rcpt-status').textContent = 'Payment Successful';
+  showScreen('screen-history-receipt');
+}
+
+function backToHistory() {
+  openTransactionHistory();
+}
+
+function backToOrderFromHistory() {
+  backToOrder();
+}
+
+// ---------------------------------------------------------
+// 12. INITIALIZATION ON PAGE LOAD
 // ---------------------------------------------------------
 window.addEventListener("DOMContentLoaded", () => {
   renderProducts();
